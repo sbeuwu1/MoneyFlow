@@ -19,3 +19,7 @@
 *   **Работа с сетью:** Retrofit
 *   **Графики и диаграммы:** MPAndroidChart
 *   **Фоновые задачи:** WorkManager
+
+## Скачать APK
+
+* **[Скачать приложение](https://github.com/sbeu-uwu/MoneyFlow/releases/download/v1.0.0/Money-Flow.apk)**
