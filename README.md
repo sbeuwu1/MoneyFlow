@@ -22,4 +22,5 @@
 
 ## Скачать APK
 
-* **[Скачать приложение](https://github.com/sbeu-uwu/MoneyFlow/releases/download/v1.0.0/Money-Flow.apk)**
+* **[GutHub](https://github.com/sbeu-uwu/MoneyFlow/releases/download/v1.0.0/Money-Flow.apk)**
+* **[RuStore](https://www.rustore.ru/catalog/app/com.example.moneyflow)**
