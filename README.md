@@ -29,6 +29,7 @@
 | Планирование | История |
 | :---: | :---: |
 | ![Screen 4](screenshots/3ca87608-a5a6-4c6c-8681-d4e11bd5d453.jpeg) | ![Screen 5](screenshots/c66c3339-4f5f-40a9-acf5-8e2feaa3f590.jpeg) |
+
 ## Скачать APK
 
 * **[GitHub](https://github.com/sbeu-uwu/MoneyFlow/releases/download/v1.0.0/Money-Flow.apk)**
