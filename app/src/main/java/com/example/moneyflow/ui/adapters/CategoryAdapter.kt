@@ -69,23 +69,22 @@ class CategoryAdapter(
         val iconResId = IconResolver.resolve(category.icon)
         holder.icon.setImageResource(iconResId)
 
-        // Изменение констрейнтов в зависимости от текста
         val iconLayoutParams = holder.icon.layoutParams as ConstraintLayout.LayoutParams
-        if (category.name.isNullOrBlank()) { // Проверяем, пустое ли имя
-            holder.textViewName.visibility = View.GONE // Скрываем TextView
+        if (category.name.isNullOrBlank()) {
+            holder.textViewName.visibility = View.GONE
             iconLayoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-            iconLayoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID // Центрируем иконку
-            iconLayoutParams.horizontalBias = 0.5f // Для центрирования
-            iconLayoutParams.marginEnd = 0 // Убираем отступ
-        } else {
-            holder.textViewName.visibility = View.VISIBLE // Показываем TextView
-            iconLayoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET // Сбрасываем констрейнты
-            iconLayoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID // Иконка привязана к началу
-            iconLayoutParams.endToStart = holder.textViewName.id // Иконка к началу TextView
+            iconLayoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
             iconLayoutParams.horizontalBias = 0.5f
-            iconLayoutParams.horizontalChainStyle = ConstraintLayout.LayoutParams.CHAIN_PACKED // Устанавливаем отступ
+            iconLayoutParams.marginEnd = 0
+        } else {
+            holder.textViewName.visibility = View.VISIBLE
+            iconLayoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET
+            iconLayoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+            iconLayoutParams.endToStart = holder.textViewName.id
+            iconLayoutParams.horizontalBias = 0.5f
+            iconLayoutParams.horizontalChainStyle = ConstraintLayout.LayoutParams.CHAIN_PACKED
         }
-        holder.icon.layoutParams = iconLayoutParams // Применяем изменения
+        holder.icon.layoutParams = iconLayoutParams
 
         val backgroundRes = if (position == selectedPosition) {
             R.drawable.category_background_selected
@@ -116,12 +115,12 @@ class CategoryAdapter(
         notifyItemChanged(selectedPosition)
     }
 
-    inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewName: TextView = itemView.findViewById(R.id.textViewCategory)
         val icon: ImageView = itemView.findViewById(R.id.imageViewCategoryIcon)
     }
 
-    inner class AddButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class AddButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewName: TextView = itemView.findViewById(R.id.textViewCategory)
         val icon: ImageView = itemView.findViewById(R.id.imageViewCategoryIcon)
     }
