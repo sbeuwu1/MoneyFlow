@@ -34,34 +34,26 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         viewmodel = ViewModelProvider(this)[HomeViewModel::class.java]
 
-        // Initialize the adapter without the onFirstCategorySelected callback,
-        // as we'll handle the initial selection in the fragment.
         adapter = WalletAdapter({ wallet ->
-            // On item click, deselect all and select the clicked one
             adapter.deselectAll()
             adapter.selectWallet(wallet)
             selectedWallet = wallet
         }, {
-            // On add button click
             startActivity(WalletAddActivity.newIntent(requireContext()))
         })
 
         viewmodel.wallets.observe(viewLifecycleOwner) { wallets ->
-            adapter.wallets = wallets // Update adapter with new list
+            adapter.wallets = wallets
 
-            // --- START OF MODIFICATION ---
-            // Logic to select the first wallet if no wallet is currently selected
             if (selectedWallet == null && wallets.isNotEmpty()) {
                 val firstWallet = wallets.first()
-                adapter.deselectAll() // Ensure no previous selections are active
-                adapter.selectWallet(firstWallet) // Select the first wallet
-                selectedWallet = firstWallet // Update the fragment's tracking variable
+                adapter.deselectAll()
+                adapter.selectWallet(firstWallet)
+                selectedWallet = firstWallet
             } else if (wallets.isEmpty()) {
-                // If there are no wallets, ensure nothing is selected
                 selectedWallet = null
                 adapter.deselectAll()
             }
-            // --- END OF MODIFICATION ---
         }
 
         viewmodel.overallBalance.observe(viewLifecycleOwner) { balance ->
@@ -72,15 +64,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.recyclerViewWallets.adapter = adapter
 
         binding.textViewChooseAll.setOnClickListener {
-            adapter.selectAll() // This should deselect any specific wallet
-            selectedWallet = null // Explicitly set to null for "all wallets" mode
+            adapter.selectAll()
+            selectedWallet = null
         }
 
         setupMonthData()
         setupItemTouchHelper()
         setupClickListeners()
 
-        // Your existing animation logic
         binding.recyclerViewWallets.postDelayed({
             val viewHolder = binding.recyclerViewWallets.findViewHolderForAdapterPosition(0)
             viewHolder?.itemView?.let { view ->
@@ -113,11 +104,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             .setMessage(getString(R.string.confirm_delete_wallet, adapter.wallets[position].name))
             .setPositiveButton(getString(R.string.delete)) { _, _ ->
                 viewmodel.deleteWallet(adapter.wallets[position])
-                // After deletion, the selectedWallet might be the one that was deleted.
-                // Reset to null and let the observe block re-select the first available.
                 selectedWallet = null
-                // The observe block for wallets will handle re-selection or showing "all"
-                // depending on what happens to the wallet list after deletion.
             }.setNegativeButton(getString(R.string.cancel)) { _, _ ->
                 adapter.notifyItemChanged(position)
             }.setOnCancelListener {
@@ -142,7 +129,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             Month.FEBRUARY -> getString(R.string.february)
             Month.MARCH -> getString(R.string.march)
             Month.APRIL -> getString(R.string.april)
-            Month.MAY -> getString(R.string.june) // Corrected from JUNE to MAY
+            Month.MAY -> getString(R.string.may)
             Month.JUNE -> getString(R.string.june)
             Month.JULY -> getString(R.string.july)
             Month.AUGUST -> getString(R.string.august)
@@ -150,8 +137,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             Month.OCTOBER -> getString(R.string.october)
             Month.NOVEMBER -> getString(R.string.november)
             Month.DECEMBER -> getString(R.string.december)
-            // Add a default case for robustness
-            else -> "" // Or throw an exception, depending on desired behavior
+            else -> ""
         }
     }
 
@@ -160,25 +146,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onResume()
         viewmodel.refreshWalletsList()
 
-        // It's crucial here to re-select the wallet if it's not null,
-        // in case the adapter state was reset or the wallet itself changed.
         selectedWallet?.let { currentSelected ->
             viewmodel.getWalletById(currentSelected.id)
                 .observe(viewLifecycleOwner) { updatedWallet ->
                     if (updatedWallet != null && updatedWallet == currentSelected) {
-                        // Wallet exists and is the same as the one we had. Ensure it's selected.
                         adapter.deselectAll()
                         adapter.selectWallet(updatedWallet)
                     } else if (updatedWallet == null) {
-                        // The previously selected wallet was deleted.
-                        // This will trigger the main observe block to re-select the first available,
-                        // or remain in "all wallets" mode if the list is empty.
                         selectedWallet = null
                         adapter.deselectAll()
                 }
-                    // Stop observing after the first update to avoid multiple selections
-                    // if the wallet LiveData emits again.
-                    // This is a common pattern to avoid unintended side effects.
                     viewmodel.getWalletById(currentSelected.id).removeObservers(viewLifecycleOwner)
             }
         }
